@@ -1,7 +1,18 @@
 # Makefile for use with Android's kernel/build system
 
-KBUILD_OPTIONS += CAMERA_KERNEL_ROOT=$(shell pwd)
-KBUILD_OPTIONS += KERNEL_ROOT=$(ROOT_DIR)/$(KERNEL_DIR)
+KBUILD_OPTIONS += CAMERA_KERNEL_ROOT=$(KERNEL_SRC)/$(M)
+KBUILD_OPTIONS += KERNEL_ROOT=$(KERNEL_SRC)
+KBUILD_OPTIONS += BOARD_PLATFORM=$(TARGET_BOARD_PLATFORM)
+# arcfox: TARGET_PRODUCT=rtwo selects config/rtwo.mk (MOT_SENSOR_PRE_POWERUP);
+# stock camera.ko proves it (6 MotPreAct strings). AF_NOISE_ELIMINATION gates
+# the mot_ois/mot_actuator objects; stock exports them.
+KBUILD_OPTIONS += TARGET_PRODUCT=rtwo
+KBUILD_OPTIONS += CONFIG_AF_NOISE_ELIMINATION=y
+KBUILD_EXTRA_SYMBOLS := \
+    $(OUT_DIR)/../sm8635-modules/qcom/opensource/mmrm-driver/Module.symvers \
+    $(OUT_DIR)/../sm8635-modules/qcom/opensource/securemsm-kernel/Module.symvers \
+    $(OUT_DIR)/../sm8635-modules/qcom/opensource/synx-kernel/Module.symvers
+KBUILD_OPTIONS += KBUILD_EXTRA_SYMBOLS="$(KBUILD_EXTRA_SYMBOLS)"
 KBUILD_OPTIONS += MODNAME=camera
 
 all: modules

@@ -6,7 +6,6 @@ def _define_module(target, variant):
     tv = "{}_{}".format(target, variant)
     deps = [
         ":camera_headers",
-        ":camera_banner",
         "//msm-kernel:all_headers",
     ]
     if target == "pineapple":
@@ -261,7 +260,6 @@ def _define_module(target, variant):
                 ],
             },
         },
-        copts = ["-include", "$(location :camera_banner)"],
         deps = deps,
         kconfig = "Kconfig",
         defconfig = "{}_defconfig".format(target),
